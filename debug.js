@@ -8,7 +8,7 @@ Number.prototype.padLeft = function(base,chr){
 "use strict";
 class smartLogger {
   constructor(thread,level) {
-    this.aLevels = ["INFO","WARN","ERROR"];
+    this.aLevels = ["INFO","WARN","ERROR","DEBUG","CRITICAL"];
     this.thread = thread;
     this.level = level;
   }
@@ -30,23 +30,30 @@ class smartLogger {
 		}
 	}
 	if (level == "INFO"){
-		 console.log("%c"+" ["+dformat+"]["+this.thread+"] :: "+msg,"background:#0000ff;color:#fff;font-size:16px");
+		 console.log("%c"+" ["+dformat+"]["+this.thread+"] :I: "+msg,"background:#0000ff;color:#fff;font-size:16px");
 	} else if (level == "WARN"){
-		console.log("%c"+" ["+dformat+"]["+this.thread+"] :: "+msg,"background:#ffa500;color:#fff;font-size:16px");
+		console.log("%c"+" ["+dformat+"]["+this.thread+"] :W: "+msg,"background:#ffa500;color:#fff;font-size:16px");
 	} else if (level == "ERROR"){
-		console.log("%c"+" ["+dformat+"]["+this.thread+"] :: "+msg,"background:#ff0000;color:#fff;font-size:16px");
-		 
+		console.log("%c"+" ["+dformat+"]["+this.thread+"] :E: "+msg,"background:#ff0000;color:#fff;font-size:16px");
+	} else if (level == "DEBUG"){
+		console.log("%c"+" ["+dformat+"]["+this.thread+"] :D: "+msg,"background:#00ff00;color:#fff;font-size:16px");
+	} else if (level == "CRITICAL"){
+		console.log("%c"+" ["+dformat+"]["+this.thread+"] :C: "+msg,"background:#ff0000;color:#000;font-size:16px");	 	 
 	} else {
-		console.log(" ["+dformat+"]["+this.thread+"] :: "+msg);
+		console.log(" ["+dformat+"]["+this.thread+"] :: U "+msg);
 		 console.log(msg);
 	}
  
 }
 }
 
-const logger = new smartLogger("MAIN","INFO");
+const mlogger = new smartLogger("MAIN","INFO");
+const tlogger = new smartLogger("THREAD1","INFO");
 
-logger.print("Hello World","INFO");
-logger.print("Hello World","WARN");
-logger.print("Hello World","ERROR");
-logger.print("Hello World");
+mlogger.print("Hello World","INFO");
+mlogger.print("Hello World","WARN");
+mlogger.print("Hello World","ERROR");
+mlogger.print("Hello World");
+tlogger.print("Hello World");
+tlogger.print("Hello World","DEBUG");
+tlogger.print("Hello World","CRITICAL");
