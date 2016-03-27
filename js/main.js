@@ -17,32 +17,32 @@ var applyStyleFormatter = function(){
 var log = function(args){
   var arr = [];
   arr = applyStyleFormatter.call(args);
-  printOnConsole(this.log.bind(this),Array.prototype.join.call(arr,", "),styles.log);
+  printOnConsole(this.log.bind(this,Array.prototype.join.call(arr,", "),styles.log));
 }
 
 var info = function(args){
   var arr = [];
   arr = applyStyleFormatter.call(args);
-  printOnConsole(this.info.bind(this),Array.prototype.join.call(arr,", "),styles.info);
+  printOnConsole(this.info.bind(this,Array.prototype.join.call(arr,", "),styles.info));
 }
 
 var warn = function(args){
   var arr = [];
   arr = applyStyleFormatter.call(args);
-  printOnConsole(this.warn.bind(this),Array.prototype.join.call(arr,", "),styles.warn);
+  printOnConsole(this.warn.bind(this,Array.prototype.join.call(arr,", "),styles.warn));
 }
 
 var error = function(args){
   var arr = [];
   arr = applyStyleFormatter.call(args);
-  printOnConsole(this.error.bind(this),Array.prototype.join.call(arr,", "),styles.error);
+  printOnConsole(this.error.bind(this,Array.prototype.join.call(arr,", "),styles.error));
 }
 
 var printOnConsole = function(fn,arg1,arg2){
 
   if(typeof fn !== 'function') return;
   o.group();
-  fn(arg1,arg2);
+  fn();
   o.log(new Date().toLocaleString());
   o.groupEnd();
 }
