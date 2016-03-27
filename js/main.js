@@ -1,5 +1,5 @@
 "use strict";
-var styles = require("./decorator.js");
+var styles = require("./decorator.js").styles;
 
 var o = console;
 var styleFormatter = "%c";
