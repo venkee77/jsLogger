@@ -6,10 +6,14 @@
   "description": "Smart Logger used to differentiate the various log format in the browser",
   "devDependencies": {
     "browserify": "latest",
-    "watchify": "latest"
+    "watchify": "latest",
+    "uglify-js":"latest"
   },
   "scripts": {
-    "build-js": "browserify  ./js/main.js -s  SmartLogger > ./js/debugger.js -dv",
+    "build-debug": "browserify  ./js/main.js -s  SmartLogger > ./js/debugger.js -d",
+    "build-min": "browserify  ./js/main.js --s  SmartLogger | uglifyjs -c > ./js/debugger.min.js",
+    "build": "npm run build-debug && npm run build-min",
     "watch-js": "watchify  ./js/main.js -d --s SmartLogger -o ./js/debugger.js  -v"
+
   }
 }
