@@ -1,0 +1,15 @@
+{
+  "name": "SmartLogger",
+  "version": "0.0.1",
+  "author": "Venkatesh Mahadevan",
+  "concept": "Lior Berezinski",
+  "description": "Smart Logger used to differentiate the various log format in the browser",
+  "devDependencies": {
+    "browserify": "latest",
+    "watchify": "latest"
+  },
+  "scripts": {
+    "build-js": "browserify  ./js/main.js -s  SmartLogger > ./js/debugger.js -dv",
+    "watch-js": "watchify  ./js/main.js -d --s SmartLogger -o ./js/debugger.js  -v"
+  }
+}
