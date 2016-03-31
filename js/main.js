@@ -27,20 +27,23 @@ var log = function(args,level){
       return item;
     }
   });
-
+  var fn = o.log;
   var style = function(level){
     var result = styles.log;
     switch(level){
       case "info":{
         result = styles.info;
+        fn = o.info;
         break;
       }
       case "warn":{
         result = styles.warn;
+        fn = o.warn;
         break;
       }
       case "error":{
         result = styles.error;
+        fn = o.error;
         break;
       }
     }
@@ -51,9 +54,9 @@ var log = function(args,level){
 
   Array.prototype.forEach.call(arr,function(item){
     if(util.isString(item)){
-      fns.push(t.log.bind(t,item,style));
+      fns.push(fn.bind(t,item,style));
     }else{
-      fns.push(t.log.bind(t,item));
+      fns.push(fn.bind(t,item));
     }
   });
   printOnConsole(fns);
