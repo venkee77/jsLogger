@@ -1,48 +1,76 @@
 "use strict";
 var styles = require("./decorator.js").styles;
+var logLevel = require("./enum.js").LogLevel;
+var util = require("./util.js").util;
 
 var o = console;
 var styleFormatter = "%c";
 
-var containsFormatter = function(format){
-  return this.indexOf(format) >= 0;
+var containsFormatter = function(arg,format){
+    try{
+
+      return arg.indexOf(format) >= 0;
+    }catch(e){
+      return false;
+    }
 }
 
-var applyStyleFormatter = function(){
-  if(this.length === 0 ) {return this;}
-  this[0] = containsFormatter.call(this[0],styleFormatter) === false? styleFormatter + this[0]:this[0];
-  return this;
+var applyStyleFormatter = function(arg){
+  //console.log(containsFormatter(arg,styleFormatter));
+  return containsFormatter(arg,styleFormatter) === false? styleFormatter + arg:arg;
 }
 
-var log = function(args){
-  var arr = [];
-  arr = applyStyleFormatter.call(args);
-  printOnConsole(this.log.bind(this,Array.prototype.join.call(arr,", "),styles.log));
+var log = function(args,level){
+  //console.log(util.isArray(args[0]), typeof args[0]);
+
+  var arr =  Array.prototype.map.call(args,function(item){
+    if(util.isString(item) || util.isBoolean(item) || util.isNumber(item)){
+      return applyStyleFormatter(item.toString());
+    }
+    else{
+      return item;
+    }
+  });
+
+  var style = function(level){
+    var result = styles.log;
+    switch(level){
+      case "info":{
+        result = styles.info;
+        break;
+      }
+      case "warn":{
+        result = styles.warn;
+        break;
+      }
+      case "error":{
+        result = styles.error;
+        break;
+      }
+    }
+    return result;
+  }(level);
+
+  var fns = []; var t = this;
+
+  Array.prototype.forEach.call(arr,function(item){
+    if(util.isString(item) || util.isBoolean(item)){
+      fns.push(t.log.bind(t,item,style));
+    }else{
+      fns.push(t.log.bind(t,item));
+    }
+  });
+  printOnConsole(fns);
 }
 
-var info = function(args){
-  var arr = [];
-  arr = applyStyleFormatter.call(args);
-  printOnConsole(this.info.bind(this,Array.prototype.join.call(arr,", "),styles.info));
-}
+var printOnConsole = function(fns){
 
-var warn = function(args){
-  var arr = [];
-  arr = applyStyleFormatter.call(args);
-  printOnConsole(this.warn.bind(this,Array.prototype.join.call(arr,", "),styles.warn));
-}
-
-var error = function(args){
-  var arr = [];
-  arr = applyStyleFormatter.call(args);
-  printOnConsole(this.error.bind(this,Array.prototype.join.call(arr,", "),styles.error));
-}
-
-var printOnConsole = function(fn,arg1,arg2){
-
-  if(typeof fn !== 'function') return;
+//  if(typeof fn !== 'function') return;
   o.group();
-  fn();
+  Array.prototype.forEach.call(fns,function(fn){
+    fn();
+  });
+
   o.log(new Date().toLocaleString());
   o.groupEnd();
 }
@@ -60,16 +88,19 @@ var bindArgsToArray = function(args){
 }
 
 module.exports = {
-      log : function(){
-                log.apply(o,bindArgsToArray(arguments));
-      },
-      info : function(){
-                info.apply(o,bindArgsToArray(arguments));
-      },
-      warn : function(){
-                warn.apply(o,bindArgsToArray(arguments));
-      },
-      error : function(){
-                error.apply(o,bindArgsToArray(arguments));
-      }
+    log : function(){
+        log.call(o,arguments,logLevel.log);
+    },
+    info : function(){
+      log.call(o,arguments,logLevel.info);
+        //log.call(o,bindArgsToArray(arguments),logLevel.info);
+    },
+    warn : function(){
+      log.call(o,arguments,logLevel.warn);
+        //log.call(o,bindArgsToArray(arguments),logLevel.warn);
+    },
+    error : function(){
+      log.call(o,arguments,logLevel.error);
+        //log.call(o,bindArgsToArray(arguments),logLevel.error);
     }
+}
