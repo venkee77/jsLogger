@@ -19,6 +19,8 @@ var applyStyleFormatter = function(arg){
 }
 
 var log = function(args,level){
+  var fns = []; var self = this;
+
   var arr =  Array.prototype.map.call(args,function(item){
     if(util.isString(item) || util.isBoolean(item) || util.isNumber(item)){
       return applyStyleFormatter(item.toString());
@@ -27,36 +29,35 @@ var log = function(args,level){
       return item;
     }
   });
-  var fn = o.log;
+
+  var fn = self.log;
   var style = function(level){
     var result = styles.log;
     switch(level){
       case "info":{
         result = styles.info;
-        fn = o.info;
+        fn = self.info;
         break;
       }
       case "warn":{
         result = styles.warn;
-        fn = o.warn;
+        fn = self.warn;
         break;
       }
       case "error":{
         result = styles.error;
-        fn = o.error;
+        fn = self.error;
         break;
       }
     }
     return result;
   }(level);
 
-  var fns = []; var t = this;
-
   Array.prototype.forEach.call(arr,function(item){
     if(util.isString(item)){
-      fns.push(fn.bind(t,item,style));
+      fns.push(fn.bind(self,item,style));
     }else{
-      fns.push(fn.bind(t,item));
+      fns.push(fn.bind(self,item));
     }
   });
   printOnConsole(fns);
