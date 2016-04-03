@@ -6,6 +6,11 @@ var util = require("./util.js").util;
 var o = console;
 var styleFormatter = "%c";
 
+var _defaults = {
+  style:styles.log,
+  func:o.log
+}
+
 var containsFormatter = function(arg,format){
     try{
       return arg.indexOf(format) >= 0;
@@ -30,9 +35,9 @@ var log = function(args,level){
     }
   });
 
-  var fn = self.log;
+  var fn = _defaults.func;
   var style = function(level){
-    var result = styles.log;
+    var result = _defaults.style;
     switch(level){
       case "info":{
         result = styles.info;
@@ -73,7 +78,28 @@ var printOnConsole = function(fns){
   o.groupEnd();
 }
 
+var setConfig = function(obj){
+  if('styles' in obj){
+    var s = obj['styles'];
+    if('log' in s){
+      _defaults.style = styles.log = s['log'];
+    }
+    if('info' in s){
+      styles.info = s['info'];
+    }
+    if('warn' in s){
+      styles.warn = s['warn'];
+    }
+    if('error' in s){
+      styles.error = s['error'];
+    }
+  }
+}
+
 module.exports = {
+    init:function(obj){
+      setConfig(obj);
+    },
     log : function(){
         log.call(o,arguments,logLevel.log);
     },

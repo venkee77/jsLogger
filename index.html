@@ -22,9 +22,20 @@
      }
    }
 
+   var obj = {
+      styles:{
+           log:"color: blue; font-style: italic; background-color: white;padding: 2px",
+           warn:"color: yellow; font-style: italic; background-color: blue;padding: 2px",
+           info:"color: white; font-style: italic; background-color: blue;padding: 2px",
+           error:"color: yellow; font-style: italic; background-color: red;padding: 2px"
+         }
+   };
+
+
   //  console.log(typeof emp);
   //  console.log(['Venkatesh','Mahadevan','VM'],['Mareeswaran','Arunachalam','MA']);
-    SmartLogger.log(["Hello World!","Hello"]);
+    SmartLogger.init(obj);
+    SmartLogger.log("Hello World!","Hello");
     SmartLogger.info("Hello World!");
     SmartLogger.warn("Hello World!");
     SmartLogger.error("Hello World!");
