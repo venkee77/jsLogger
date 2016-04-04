@@ -25,6 +25,8 @@ var applyStyleFormatter = function(arg){
 
 var log = function(args,level){
   var fns = []; var self = this;
+  var fn = _defaults.func;
+  var style = styles[level];
 
   var arr =  Array.prototype.map.call(args,function(item){
     if(util.isString(item) || util.isBoolean(item) || util.isNumber(item)){
@@ -35,29 +37,7 @@ var log = function(args,level){
     }
   });
 
-  var fn = _defaults.func;
-  var style = function(level){
-    var result = _defaults.style;
-    switch(level){
-      case "info":{
-        result = styles.info;
-        fn = self.info;
-        break;
-      }
-      case "warn":{
-        result = styles.warn;
-        fn = self.warn;
-        break;
-      }
-      case "error":{
-        result = styles.error;
-        fn = self.error;
-        break;
-      }
-    }
-    return result;
-  }(level);
-
+  fn = self[level];
   Array.prototype.forEach.call(arr,function(item){
     if(util.isString(item)){
       fns.push(fn.bind(self,item,style));
